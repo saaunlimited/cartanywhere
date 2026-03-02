@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CartAnywhere — Shop Smarter from Anywhere</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --flame: #FF6B35;
+      --amber: #F7931E;
+      --crimson: #FF3D57;
+      --night: #1A110B;
+      --espresso: #2D2420;
+      --clay: #8C7A6E;
+      --sand: #F5EFEB;
+      --cream: #FFF8F4;
+      --white: #FFFFFF;
+      --font-display: 'Fraunces', serif;
+      --font-body: 'Outfit', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--cream);
+      color: var(--espresso);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NOISE TEXTURE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 248, 244, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(45, 36, 32, 0.06);
+      transition: box-shadow 0.3s ease;
+    }
+
+    nav.scrolled {
+      box-shadow: 0 4px 30px rgba(26, 17, 11, 0.08);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo svg { width: 32px; height: 32px; }
+
+    .nav-logo span {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--night);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--clay);
+      font-weight: 500;
+      font-size: 15px;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover { color: var(--flame); }
+
+    .nav-cta {
+      padding: 10px 24px;
+      background: var(--night);
+      color: var(--white) !important;
+      border-radius: 50px;
+      font-weight: 600 !important;
+      font-size: 14px !important;
+      transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(26, 17, 11, 0.2);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 140px 60px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    .hero-bg-orb.one {
+      width: 700px;
+      height: 700px;
+      background: var(--flame);
+      top: -200px;
+      right: -150px;
+    }
+
+    .hero-bg-orb.two {
+      width: 500px;
+      height: 500px;
+      background: var(--amber);
+      bottom: -100px;
+      left: -100px;
+    }
+
+    .hero-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-text { max-width: 560px; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: var(--white);
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--flame);
+      box-shadow: 0 2px 12px rgba(255, 107, 53, 0.12);
+      margin-bottom: 28px;
+      animation: fadeSlideUp 0.7s ease both;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--flame);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(44px, 5.5vw, 72px);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--night);
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      animation: fadeSlideUp 0.7s ease 0.1s both;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--flame);
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--clay);
+      max-width: 460px;
+      margin-bottom: 40px;
+      animation: fadeSlideUp 0.7s ease 0.2s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      animation: fadeSlideUp 0.7s ease 0.3s both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 16px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--flame), var(--amber));
+      color: var(--white);
+      box-shadow: 0 4px 20px rgba(255, 107, 53, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(255, 107, 53, 0.45);
+    }
+
+    .btn-primary svg { width: 20px; height: 20px; }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--espresso);
+      border: 2px solid var(--sand);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--flame);
+      color: var(--flame);
+      transform: translateY(-2px);
+    }
+
+    /* Hero visual */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      animation: fadeSlideUp 0.8s ease 0.35s both;
+    }
+
+    .hero-phone {
+      width: 300px;
+      height: 600px;
+      background: var(--white);
+      border-radius: 40px;
+      box-shadow:
+        0 30px 80px rgba(26, 17, 11, 0.12),
+        0 0 0 1px rgba(26, 17, 11, 0.04),
+        inset 0 2px 0 rgba(255, 255, 255, 0.8);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .phone-header {
+      background: linear-gradient(135deg, var(--flame), var(--amber));
+      padding: 48px 20px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .phone-header svg { width: 24px; height: 24px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .phone-header span { color: white; font-weight: 700; font-size: 17px; }
+
+    .phone-items { padding: 12px 14px; }
+
+    .phone-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--cream);
+      border-radius: 14px;
+      margin-bottom: 8px;
+      animation: itemSlide 0.5s ease both;
+    }
+
+    .phone-item:nth-child(2) { animation-delay: 0.1s; }
+    .phone-item:nth-child(3) { animation-delay: 0.2s; }
+    .phone-item:nth-child(4) { animation-delay: 0.3s; }
+
+    @keyframes itemSlide {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .phone-item-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #FFE0CC, #FFEEDD);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .phone-item-text { flex: 1; }
+    .phone-item-name { font-size: 13px; font-weight: 600; color: var(--espresso); }
+    .phone-item-site { font-size: 11px; color: var(--clay); margin-top: 2px; }
+    .phone-item-price { font-size: 14px; font-weight: 700; color: var(--flame); margin-top: 3px; }
+
+    /* Floating extension card next to phone */
+    .floating-extension {
+      position: absolute;
+      right: -30px;
+      top: 120px;
+      width: 220px;
+      background: var(--white);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 16px 48px rgba(26, 17, 11, 0.12);
+      animation: float 4s ease-in-out infinite;
+      z-index: 3;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .floating-extension-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .floating-ext-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--flame), var(--amber));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .floating-ext-icon svg { width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2.2; }
+
+    .floating-extension-header span {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--espresso);
+    }
+
+    .floating-ext-toast {
+      background: var(--cream);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .floating-ext-toast .check {
+      width: 22px;
+      height: 22px;
+      background: #22C55E;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .floating-ext-toast .check svg { width: 12px; height: 12px; stroke: white; fill: none; stroke-width: 3; }
+
+    .floating-ext-toast span {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--espresso);
+    }
+
+    /* ─── FEATURES SECTION ─── */
+    .features {
+      padding: 120px 60px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--flame);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 800;
+      color: var(--night);
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 60px;
+      max-width: 500px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 36px 30px;
+      border: 1px solid rgba(45, 36, 32, 0.04);
+      box-shadow: 0 2px 16px rgba(26, 17, 11, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(26, 17, 11, 0.1);
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+      font-size: 26px;
+    }
+
+    .feature-icon.orange { background: linear-gradient(135deg, #FFE0CC, #FFEEDD); }
+    .feature-icon.red { background: linear-gradient(135deg, #FFD5D9, #FFE8EA); }
+    .feature-icon.green { background: linear-gradient(135deg, #D1FAE5, #ECFDF5); }
+
+    .feature-card h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--night);
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--clay);
+    }
+
+    /* ─── EXTENSION SECTION ─── */
+    .extension-section {
+      padding: 120px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .extension-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--night);
+      border-radius: 0;
+    }
+
+    .extension-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .extension-text .section-label { color: var(--amber); }
+
+    .extension-text .section-title {
+      color: var(--white);
+      margin-bottom: 24px;
+    }
+
+    .extension-desc {
+      font-size: 17px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.55);
+      margin-bottom: 20px;
+      max-width: 440px;
+    }
+
+    .extension-steps {
+      list-style: none;
+      margin-bottom: 40px;
+    }
+
+    .extension-steps li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--flame), var(--amber));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .step-content h4 {
+      color: var(--white);
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    .step-content p {
+      color: rgba(255, 255, 255, 0.45);
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, var(--flame), var(--amber));
+      color: var(--white);
+      box-shadow: 0 4px 24px rgba(255, 107, 53, 0.4);
+      font-size: 17px;
+      padding: 18px 36px;
+      border-radius: 16px;
+    }
+
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 36px rgba(255, 107, 53, 0.55);
+    }
+
+    .btn-download svg { width: 22px; height: 22px; }
+
+    /* Extension demo visual */
+    .extension-demo {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+
+    .browser-mockup {
+      width: 480px;
+      background: #2A2320;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+    }
+
+    .browser-topbar {
+      background: #3A322D;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .browser-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .browser-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .browser-dots span:nth-child(1) { background: #FF605C; }
+    .browser-dots span:nth-child(2) { background: #FFBD44; }
+    .browser-dots span:nth-child(3) { background: #00CA4E; }
+
+    .browser-url {
+      flex: 1;
+      background: #4A413B;
+      border-radius: 8px;
+      padding: 6px 14px;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      font-family: var(--font-body);
+    }
+
+    .browser-ext-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--flame), var(--amber));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .browser-ext-icon svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2.2; }
+
+    .browser-ext-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 14px;
+      height: 14px;
+      background: var(--crimson);
+      border-radius: 50%;
+      font-size: 8px;
+      font-weight: 800;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .browser-page {
+      height: 300px;
+      background: #F8F5F2;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fake-product {
+      text-align: center;
+    }
+
+    .fake-product-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #E8E0DA, #D5CDC6);
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .fake-product-name {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--espresso);
+      margin-bottom: 4px;
+    }
+
+    .fake-product-price {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--flame);
+    }
+
+    /* FAB inside browser mockup */
+    .mock-fab {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--flame), var(--amber));
+      box-shadow: 0 4px 16px rgba(255, 107, 53, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fabPulse 2s ease-in-out infinite;
+    }
+
+    .mock-fab svg { width: 22px; height: 22px; stroke: white; fill: none; stroke-width: 2.2; }
+
+    @keyframes fabPulse {
+      0%, 100% { box-shadow: 0 4px 16px rgba(255, 107, 53, 0.4); }
+      50% { box-shadow: 0 4px 28px rgba(255, 107, 53, 0.65); }
+    }
+
+    /* Mock toast in browser */
+    .mock-toast {
+      position: absolute;
+      bottom: 78px;
+      right: 20px;
+      background: var(--espresso);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      animation: toastPop 3s ease-in-out infinite;
+    }
+
+    .mock-toast .g { color: #4ADE80; }
+
+    @keyframes toastPop {
+      0%, 30% { opacity: 0; transform: translateY(6px); }
+      40%, 80% { opacity: 1; transform: translateY(0); }
+      90%, 100% { opacity: 0; transform: translateY(-4px); }
+    }
+
+    /* ─── HOW IT WORKS ─── */
+    .how-it-works {
+      padding: 120px 60px;
+      max-width: 1280px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .how-it-works .section-title {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 600px;
+    }
+
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 20px;
+    }
+
+    .step-card {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .step-card-num {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      background: var(--cream);
+      border: 2px solid var(--sand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--flame);
+    }
+
+    .step-card h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--night);
+      margin-bottom: 10px;
+    }
+
+    .step-card p {
+      font-size: 15px;
+      color: var(--clay);
+      line-height: 1.6;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 48px 60px;
+      border-top: 1px solid var(--sand);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .footer-logo svg { width: 24px; height: 24px; }
+    .footer-logo span { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--night); }
+
+    .footer-copy { font-size: 13px; color: var(--clay); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 960px) {
+      nav { padding: 16px 24px; }
+      .nav-links { gap: 20px; }
+
+      .hero { padding: 120px 28px 60px; }
+      .hero-content { grid-template-columns: 1fr; gap: 50px; }
+      .hero-visual { display: none; }
+
+      .features { padding: 80px 28px; }
+      .features-grid { grid-template-columns: 1fr; }
+
+      .extension-section { padding: 80px 28px; }
+      .extension-inner { grid-template-columns: 1fr; gap: 50px; }
+      .extension-demo { display: none; }
+
+      .how-it-works { padding: 80px 28px; }
+      .steps-row { grid-template-columns: 1fr; gap: 24px; }
+
+      footer { padding: 32px 28px; flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">
+      <svg viewBox="0 0 512 512">
+        <defs>
+          <linearGradient id="ng" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#FF6B35"/>
+            <stop offset="100%" style="stop-color:#F7931E"/>
+          </linearGradient>
+        </defs>
+        <rect x="16" y="16" width="480" height="480" rx="110" fill="url(#ng)"/>
+        <g transform="translate(256,248)" stroke="white" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <line x1="-130" y1="-60" x2="-100" y2="-60"/>
+          <path d="M-100,-60 L-82,55 C-79,68 -68,77 -54,77 L95,77 C110,77 121,68 124,55 L142,-22 L-90,-22"/>
+          <circle cx="-45" cy="110" r="20" stroke-width="18"/>
+          <circle cx="85" cy="110" r="20" stroke-width="18"/>
+        </g>
+      </svg>
+      <span>CartAnywhere</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#extension">Extension</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#extension" class="nav-cta">Get Extension</a></li>
+    </ul>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-orb one"></div>
+    <div class="hero-bg-orb two"></div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-badge">New — Browser Extension</div>
+        <h1>Shop <em>anywhere.</em><br>Save everything.</h1>
+        <p class="hero-desc">CartAnywhere lets you save products from any website with a single click. Never lose track of something you wanted to buy again.</p>
+        <div class="hero-actions">
+          <a href="#extension" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Get the Extension
+          </a>
+          <a href="#features" class="btn btn-secondary">Learn More</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-phone">
+          <div class="phone-header">
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1.5"/><circle cx="20" cy="21" r="1.5"/><path d="M1 1h4l2.68 13.39a1.5 1.5 0 001.48 1.11h9.72a1.5 1.5 0 001.48-1.11L23 6H6"/></svg>
+            <span>CartAnywhere</span>
+          </div>
+          <div class="phone-items">
+            <div class="phone-item">
+              <div class="phone-item-icon">📦</div>
+              <div class="phone-item-text">
+                <div class="phone-item-name">Wireless Headphones Pro</div>
+                <div class="phone-item-site">amazon.com</div>
+                <div class="phone-item-price">$249.99</div>
+              </div>
+            </div>
+            <div class="phone-item">
+              <div class="phone-item-icon">👟</div>
+              <div class="phone-item-text">
+                <div class="phone-item-name">Air Max 90 — Sail</div>
+                <div class="phone-item-site">nike.com</div>
+                <div class="phone-item-price">$130.00</div>
+              </div>
+            </div>
+            <div class="phone-item">
+              <div class="phone-item-icon">🎨</div>
+              <div class="phone-item-text">
+                <div class="phone-item-name">Handmade Ceramic Mug Set</div>
+                <div class="phone-item-site">etsy.com</div>
+                <div class="phone-item-price">$38.50</div>
+              </div>
+            </div>
+            <div class="phone-item">
+              <div class="phone-item-icon">💻</div>
+              <div class="phone-item-text">
+                <div class="phone-item-name">Mechanical Keyboard 75%</div>
+                <div class="phone-item-site">bestbuy.com</div>
+                <div class="phone-item-price">$89.99</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="floating-extension">
+          <div class="floating-extension-header">
+            <div class="floating-ext-icon">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            </div>
+            <span>CartAnywhere Extension</span>
+          </div>
+          <div class="floating-ext-toast">
+            <div class="check">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span>Added to CartAnywhere!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURES ─── -->
+  <section class="features reveal" id="features">
+    <span class="section-label">Features</span>
+    <h2 class="section-title">Everything you need to shop smarter</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon orange">🛒</div>
+        <h3>One-Click Save</h3>
+        <p>See something you like? Hit the floating cart button and it's saved. No sign-ups, no friction — just click and go.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon red">💰</div>
+        <h3>Auto Price Detection</h3>
+        <p>CartAnywhere automatically detects product names and prices from Amazon, Walmart, eBay, Target, and hundreds more retailers.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon green">📋</div>
+        <h3>Universal Wishlist</h3>
+        <p>All your saved items in one place — across every store and website. No more 47 open tabs of "things to buy later."</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── EXTENSION DOWNLOAD ─── -->
+  <section class="extension-section" id="extension">
+    <div class="extension-inner">
+      <div class="extension-text reveal">
+        <span class="section-label">Browser Extension</span>
+        <h2 class="section-title">Add to cart from<br>any website</h2>
+        <p class="extension-desc">Install the CartAnywhere Chrome extension and a floating cart button appears on every page. One click saves any product instantly.</p>
+        <ol class="extension-steps">
+          <li>
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Download the extension</h4>
+              <p>Click below to download the extension .zip file</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Open Chrome Extensions</h4>
+              <p>Go to chrome://extensions and enable Developer Mode</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Load the extension</h4>
+              <p>Click "Load unpacked" and select the unzipped folder</p>
+            </div>
+          </li>
+        </ol>
+        <a href="#" class="btn btn-download" id="downloadBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Extension
+        </a>
+      </div>
+      <div class="extension-demo reveal">
+        <div class="browser-mockup">
+          <div class="browser-topbar">
+            <div class="browser-dots"><span></span><span></span><span></span></div>
+            <div class="browser-url">amazon.com/dp/wireless-headphones-pro</div>
+            <div class="browser-ext-icon">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.5"/><circle cx="20" cy="21" r="1.5"/><path d="M1 1h4l2.68 13.39a1.5 1.5 0 001.48 1.11h9.72a1.5 1.5 0 001.48-1.11L23 6H6"/></svg>
+              <div class="browser-ext-badge">3</div>
+            </div>
+          </div>
+          <div class="browser-page">
+            <div class="fake-product">
+              <div class="fake-product-img">🎧</div>
+              <div class="fake-product-name">Wireless Headphones Pro</div>
+              <div class="fake-product-price">$249.99</div>
+            </div>
+            <div class="mock-fab">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            </div>
+            <div class="mock-toast"><span class="g">✓</span> Added to CartAnywhere</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HOW IT WORKS ─── -->
+  <section class="how-it-works reveal" id="how-it-works">
+    <span class="section-label">How It Works</span>
+    <h2 class="section-title">Three steps to never lose a product again</h2>
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-card-num">1</div>
+        <h3>Browse Normally</h3>
+        <p>Shop on any website like you always do. CartAnywhere quietly adds a small cart button to every page.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-card-num">2</div>
+        <h3>Click to Save</h3>
+        <p>Found something you love? Tap the orange button. Product name, price, and link are saved instantly.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-card-num">3</div>
+        <h3>Buy When Ready</h3>
+        <p>Open CartAnywhere anytime to review your saved items and jump straight to checkout on any store.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <a href="#" class="footer-logo">
+      <svg viewBox="0 0 512 512">
+        <defs><linearGradient id="fg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#FF6B35"/><stop offset="100%" style="stop-color:#F7931E"/></linearGradient></defs>
+        <rect x="16" y="16" width="480" height="480" rx="110" fill="url(#fg)"/>
+        <g transform="translate(256,248)" stroke="white" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <line x1="-130" y1="-60" x2="-100" y2="-60"/>
+          <path d="M-100,-60 L-82,55 C-79,68 -68,77 -54,77 L95,77 C110,77 121,68 124,55 L142,-22 L-90,-22"/>
+          <circle cx="-45" cy="110" r="20" stroke-width="18"/>
+          <circle cx="85" cy="110" r="20" stroke-width="18"/>
+        </g>
+      </svg>
+      <span>CartAnywhere</span>
+    </a>
+    <span class="footer-copy">&copy; 2026 CartAnywhere. Built with care.</span>
+  </footer>
+
+  <script>
+    // Navbar scroll shadow
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    reveals.forEach(el => observer.observe(el));
+
+    // Download extension zip
+    document.getElementById('downloadBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      const link = document.createElement('a');
+      link.href = './cartanywhere-extension.zip';
+      link.download = 'cartanywhere-extension.zip';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  </script>
+</body>
+</html>
